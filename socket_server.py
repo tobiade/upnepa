@@ -2,7 +2,7 @@ import asyncio
 import json
 from math import pi
 import redis.asyncio as redis
-from websockets.asyncio.server import serve, broadcast
+from websockets.asyncio.server import serve
 from redis.asyncio.client import PubSub
 import sys
 import aiohttp
