@@ -9,7 +9,7 @@ export default function LEDGrid() {
 
   useEffect(() => {
     // Initialize WebSocket connection
-    wsRef.current = new WebSocket('ws://192.168.0.225:8765')
+    wsRef.current = new WebSocket('ws://localhost:8765')
 
     wsRef.current.onopen = () => {
       console.log('WebSocket connection established')
