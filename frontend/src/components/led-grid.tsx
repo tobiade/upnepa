@@ -9,7 +9,12 @@ export default function LEDGrid() {
 
   useEffect(() => {
     // Initialize WebSocket connection
-    wsRef.current = new WebSocket('ws://localhost:8765')
+    const host = process.env.REACT_APP_WEBSOCKET_HOST
+    if(!host) {
+      console.error('REACT_APP_WEBSOCKET_HOST environment variable is not set')
+      return
+    }
+    wsRef.current = new WebSocket(host)
 
     wsRef.current.onopen = () => {
       console.log('WebSocket connection established')
