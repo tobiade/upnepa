@@ -1,6 +1,8 @@
 import asyncio
 import json
 from math import pi
+import os
+import ssl
 import redis.asyncio as redis
 from websockets.asyncio.server import serve
 from redis.asyncio.client import PubSub
@@ -10,6 +12,8 @@ from typing import Optional
 
 from constants import LED_CHANNEL, LED_QUEUE
 
+CERT_PATH = '/etc/letsencrypt/live/upnepa.live/fullchain.pem'
+KEY_PATH = '/etc/letsencrypt/live/upnepa.live/privkey.pem'
 
 class ConnectionHandler:
     def __init__(self, redisURL: str, piURL: str):
@@ -87,13 +91,21 @@ async def handler(websocket):
     async for message in websocket:
         await connection_handler.store(message)
 
+def ssl_cert_and_key_exist():
+    return os.path.exists(CERT_PATH) and os.path.exists(KEY_PATH)
 
 async def main():
     # Initialize the aiohttp ClientSession
     await connection_handler.start()
+    
+    # Set up SSL if needed
+    ssl_context = None
+    if ssl_cert_and_key_exist():
+        ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+        ssl_context.load_cert_chain(CERT_PATH, keyfile=KEY_PATH)
 
     try:
-        async with serve(handler, "0.0.0.0", int(sys.argv[1])):
+        async with serve(handler, "0.0.0.0", int(sys.argv[1]), ssl=ssl_context):
             # asyncio.create_task(connection_handler.listen())
             await asyncio.get_running_loop().create_future()  # run forever
     finally:
