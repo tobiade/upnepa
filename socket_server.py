@@ -103,10 +103,12 @@ async def main():
     if ssl_cert_and_key_exist():
         ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
         ssl_context.load_cert_chain(CERT_PATH, keyfile=KEY_PATH)
+        print("SSL context loaded")
 
     try:
         async with serve(handler, "0.0.0.0", int(sys.argv[1]), ssl=ssl_context):
             # asyncio.create_task(connection_handler.listen())
+            print("Server started")
             await asyncio.get_running_loop().create_future()  # run forever
     finally:
         # Ensure the ClientSession is closed on shutdown
