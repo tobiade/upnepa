@@ -120,7 +120,7 @@ if __name__ == '__main__':
         update_thread.start()
         
         # app.run(host='0.0.0.0', port=5000, debug=False)
-        read_led_state_from_queue('redis://upnepa.live', 10)
+        read_led_state_from_queue('redis://159.65.93.235', 10)
     except KeyboardInterrupt:
         led_controller.destroy()
         pass

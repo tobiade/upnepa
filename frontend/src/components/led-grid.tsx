@@ -87,50 +87,27 @@ export default function LEDGrid() {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
-      <h1 className="text-3xl font-bold mb-8">LED Grid Controller</h1>
-      <div className="flex flex-col md:flex-row gap-8 w-full max-w-4xl">
-        <div className="flex-1">
-          <h2 className="text-xl font-semibold mb-4">Interactive LED Grid</h2>
-          <div className="aspect-square bg-black rounded-lg overflow-hidden shadow-lg">
-            <svg
-              className="w-full h-full"
-              viewBox="0 0 8 8"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              {ledStates.map((isOn, index) => (
-                <rect
-                  key={index}
-                  x={index % 8}
-                  y={Math.floor(index / 8)}
-                  width="1"
-                  height="1"
-                  fill={isOn ? 'rgba(255, 0, 0, 0.5)' : 'rgba(255, 255, 255, 0.1)'}
-                  stroke="rgba(255, 255, 255, 0.2)"
-                  strokeWidth="0.05"
-                  className="cursor-pointer transition-colors duration-200"
-                  onClick={() => toggleLED(index)}
-                />
-              ))}
-            </svg>
-          </div>
-          <p className="mt-4 text-gray-600 text-center">Click on the grid to toggle LEDs red</p>
-        </div>
-        <div className="flex-1">
-          <h2 className="text-xl font-semibold mb-4">Live Video Stream</h2>
-          <div className="aspect-square bg-black rounded-lg overflow-hidden shadow-lg">
-            <video
-              ref={videoRef}
-              className="w-full h-full object-cover"
-              autoPlay
-              muted
-              loop
-              playsInline
-            />
-          </div>
-          <p className="mt-4 text-gray-600 text-center">Live feed of the LED grid</p>
-        </div>
-      </div>
+    <div className="aspect-square bg-black rounded-lg overflow-hidden shadow-lg">
+      <svg
+      className="w-full h-full"
+      viewBox="0 0 8 8"
+      xmlns="http://www.w3.org/2000/svg"
+      >
+      {ledStates.map((isOn, index) => (
+        <rect
+        key={index}
+        x={index % 8}
+        y={Math.floor(index / 8)}
+        width="1"
+        height="1"
+        fill={isOn ? 'rgba(255, 0, 0, 0.5)' : 'rgba(255, 255, 255, 0.1)'}
+        stroke="rgba(255, 255, 255, 0.2)"
+        strokeWidth="0.05"
+        className="cursor-pointer transition-colors duration-200"
+        onClick={() => toggleLED(index)}
+        />
+      ))}
+      </svg>
     </div>
   )
 }

@@ -1,5 +1,5 @@
 import './App.css';
-import LEDGrid from './components/led-grid';
+import Page from './components/page';
 
 function App() {
   // return (
@@ -20,7 +20,7 @@ function App() {
   //     </header>
   //   </div>
   // );
-  return <LEDGrid/>
+  return <Page/>
 }
 
 export default App;
