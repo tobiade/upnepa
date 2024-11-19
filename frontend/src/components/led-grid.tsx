@@ -92,7 +92,7 @@ export default function LEDGrid() {
   };
 
   return (
-    <div className="aspect-square bg-black rounded-lg overflow-hidden shadow-lg flex-1">
+    <div className="bg-black rounded-lg overflow-hidden shadow-lg flex-1">
       <svg
         className="w-full h-full"
         viewBox="0 0 8 8"

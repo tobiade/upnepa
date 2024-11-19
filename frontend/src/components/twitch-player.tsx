@@ -2,7 +2,7 @@ import { TwitchEmbed } from "react-twitch-embed";
 
 export default function TwitchStream() {
   return (
-    <div>
+    <div className="flex-1 rounded-lg overflow-hidden shadow-lg">
       <TwitchEmbed
         channel="egbontobex"
         id="twitch-embed"
@@ -10,7 +10,7 @@ export default function TwitchStream() {
         muted
         onVideoPause={() => console.log("Video paused")}
         width="100%"
-        height={480}
+        height="100%"
       />
     </div>
   );
