@@ -11,6 +11,7 @@ export default function TwitchStream() {
         onVideoPause={() => console.log("Video paused")}
         width="100%"
         height="100%"
+        withChat={false}
       />
     </div>
   );
