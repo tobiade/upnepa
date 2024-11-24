@@ -3,7 +3,7 @@ import { useEffect } from "react";
 export const PiStream = () => {
     useEffect(() => {
         // Initialize WebSocket connection
-        const host = process.env.LIVE_STREAM_URL;
+        const host = process.env.REACT_APP_LIVE_STREAM_URL;
         if (!host) {
             console.error("LIVE_STREAM_URL environment variable is not set");
             return;
