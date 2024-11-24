@@ -1,6 +1,4 @@
 import asyncio
-import json
-from math import pi
 import os
 import ssl
 import redis.asyncio as redis
@@ -8,18 +6,10 @@ from websockets.asyncio.server import serve
 from redis.asyncio.client import PubSub
 import sys
 import aiohttp
-from typing import Optional
 
-from constants import LED_CHANNEL, LED_QUEUE, LED_STREAM_CHANNEL
+from constants import LED_QUEUE, LED_STREAM_CHANNEL
 import io
-import logging
-import socketserver
-from http import server
 from threading import Condition
-
-from picamera2 import Picamera2
-from picamera2.encoders import JpegEncoder
-from picamera2.outputs import FileOutput
 
 CERT_PATH = '/etc/letsencrypt/live/upnepa.live/fullchain.pem'
 KEY_PATH = '/etc/letsencrypt/live/upnepa.live/privkey.pem'
