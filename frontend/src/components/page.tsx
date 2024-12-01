@@ -1,5 +1,5 @@
 import LEDGrid from "./led-grid";
-import { PiStream } from "./pi-stream";
+import { WebRTCPlayer } from "./webrtc-player";
 
 export default function Page() {
   return (
@@ -14,7 +14,8 @@ export default function Page() {
         <div className="flex flex-1 bg-gray-200 p-4 rounded-lg shadow-md m-2 min-w-[40vw] aspect-square">
           {/* <h2 className="text-xl font-bold mb-4">Twitch Player</h2> */}
           {/* <TwitchStream /> */}
-          <PiStream />
+          {/* <PiStream /> */}
+          <WebRTCPlayer/>
         </div>
       </div>
     </div>

@@ -9,9 +9,10 @@ from http import server
 from threading import Condition
 
 from picamera2 import Picamera2
-from picamera2.encoders import JpegEncoder, Quality
+from picamera2.encoders import Quality,H264Encoder
 from picamera2.outputs import FileOutput
 from libcamera import controls
+import time
 
 PAGE = """\
 <html>
@@ -30,10 +31,13 @@ class StreamingOutput(io.BufferedIOBase):
     def __init__(self):
         self.frame = None
         self.condition = Condition()
+        self.total_bytes = 0
 
     def write(self, buf):
         with self.condition:
             self.frame = buf
+            print("Length of frame: ", len(buf))
+            self.total_bytes += len(buf)
             self.condition.notify_all()
 
 
@@ -63,7 +67,7 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
                         output.condition.wait()
                         frame = output.frame
                     self.wfile.write(b'--FRAME\r\n')
-                    self.send_header('Content-Type', 'image/jpeg')
+                    self.send_header('Content-Type', 'video/mp4')
                     self.send_header('Content-Length', len(frame))
                     self.end_headers()
                     self.wfile.write(frame)
@@ -95,11 +99,17 @@ picam2.configure(picam2.create_video_configuration(main={"size": (1280, 720)}, c
 
     }))
 output = StreamingOutput()
-picam2.start_recording(JpegEncoder(q=100), FileOutput(output), quality=Quality.VERY_HIGH)
-
+# picam2.start_recording(JpegEncoder(q=100), FileOutput(output), quality=Quality.VERY_HIGH)
+picam2.start_recording(H264Encoder(), FileOutput(output), quality=Quality.VERY_HIGH)
 try:
+    start_time = time.time()
+    print("Start time:", start_time)
     address = ('', 8000)
     server = StreamingServer(address, StreamingHandler)
     server.serve_forever()
 finally:
     picam2.stop_recording()
+    elapsed = time.time() - start_time
+    print("Total time:", elapsed)
+    print("Total bytes:", output.total_bytes)
+    print("Average bitrate:", output.total_bytes * 8 / elapsed / 1000, "kbps")

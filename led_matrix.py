@@ -1,7 +1,5 @@
-import json
 from typing import Dict, List, Tuple
 
-from numpy import sort
 
 class LEDMatrix:
     def __init__(self, matrix=None):
@@ -13,7 +11,7 @@ class LEDMatrix:
     def serialize_to_bitmask(self) -> Dict[str, List[Tuple[int, int]]]:
         """
         Serializes the matrix to a list of size 8, where each entry is an 8-bit integer.
-        Each integer represents the state of a column, where each bit corresponds to a row (1 = on, 0 = off).
+        The index of the list is the column, and the value at each index represents the state of the rows within that column, where each bit corresponds to the row state1 (1 = on, 0 = off).
         """
         on = []
         for column, rows in self.matrix.get("on", {}).items():
@@ -46,28 +44,9 @@ class LEDMatrix:
             for row in rows:
                 grid[row][int(col)] = '#'
 
-        # for col, rows in data["off"].items():
-        #     for row in rows:
-        #         grid[row][int(col)] = '#'
-
         # Generate the string output
         output = '\n'.join(' '.join(row) for row in grid)
         return output
-    
-    def to_json(self) -> str:
-        """
-        Serializes the matrix to JSON.
-        """
-        return json.dumps(self.matrix)
-
-    @classmethod
-    def from_json(cls, json_str: str):
-        """
-        Deserializes the matrix from JSON. 
-        """
-        obj = cls()
-        obj.matrix = json.loads(json_str)
-        return obj
 
     def __repr__(self):
         return f"LEDMatrix({self.matrix})"

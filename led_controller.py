@@ -1,20 +1,16 @@
-from os import read
+import asyncio
 from gpiozero import OutputDevice
 import time
-from flask import Flask, request, jsonify
-from threading import Lock, Thread
-from gpiozero import LED
-from typing import List, Dict, Tuple, Any, Optional
+from threading import Thread
+from typing import List, Dict, Tuple
 import json
 
 
-import redis
-from redis import Redis
+import redis.asyncio as redis
 
 from constants import LED_CHANNEL, LED_QUEUE
 from led_matrix import LEDMatrix
 
-app = Flask(__name__)
 
 LSBFIRST = 1
 MSBFIRST = 2
@@ -89,14 +85,14 @@ class LEDController:
 led_controller = LEDController()
 
 
-def read_led_state_from_queue(redisUrl: str, batch_size: int) -> None:
+async def read_led_state_from_queue(redisUrl: str, batch_size: int) -> None:
     redisClient = redis.from_url(redisUrl)
     while True:
-        with redisClient.pipeline() as pipe:
+        async with redisClient.pipeline() as pipe:
             try:
                 for _ in range(batch_size):
                     pipe.rpop(LED_QUEUE)
-                messages = pipe.execute()
+                messages = await pipe.execute()
                 if messages is not None:
                     for message in messages:
                         if message is None:
@@ -110,17 +106,18 @@ def read_led_state_from_queue(redisUrl: str, batch_size: int) -> None:
                 print(e)
         #  Publish led_state to Redis channel
         response = {'ledStates': led_controller.led_states()}
-        redisClient.publish(LED_CHANNEL, json.dumps(response))
+        await redisClient.publish(LED_CHANNEL, json.dumps(response))
         time.sleep(0.05)
 
-if __name__ == '__main__':
+async def main():
     try:
         # Start the LED update loop in a separate thread
         update_thread = Thread(target=led_controller.start_display, daemon=True)
         update_thread.start()
         
-        # app.run(host='0.0.0.0', port=5000, debug=False)
-        read_led_state_from_queue('redis://159.65.93.235', 10)
+        await read_led_state_from_queue('redis://159.65.93.235', 10)
     except KeyboardInterrupt:
         led_controller.destroy()
         pass
+
+asyncio.run(main())
