@@ -7,7 +7,6 @@ After=network.target
 [Service]
 User=tobi
 WorkingDirectory=/home/tobi/Development/mediamtx
-# Environment="PATH=/home/tobi/python/venv/bin"
 ExecStart=/home/tobi/Development/mediamtx /home/tobi/Development/upnepa/mediamtx/mediamtx.yml
 Restart=always
 
