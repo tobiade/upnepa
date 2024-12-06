@@ -1,0 +1,15 @@
+# systemd/video_feed.service runs locally on the Pi
+
+[Unit]
+Description=Video Feed Command
+After=network.target
+
+[Service]
+User=tobi
+WorkingDirectory=/home/tobi/Development/upnepa
+# Environment="PATH=/home/tobi/python/venv/bin"
+ExecStart=/home/tobi/Development/upnepa/scripts/video_feed.sh rtsp://upnepa.live
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,15 @@
+# systemd/socket_server.service
+
+[Unit]
+Description=Python Socket Server
+After=network.target
+
+[Service]
+User=tobi
+WorkingDirectory=/home/tobi/Development/upnepa
+# Environment="PATH=/home/tobi/python/venv/bin"
+ExecStart=/home/tobi/Development/upnepa/upnepa-env/bin/python home/tobi/Development/upnepa/socket_server.py 8765
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,15 @@
+# systemd/led-controller.service runs locally on the Pi
+
+[Unit]
+Description=Python Socket Server
+After=network.target
+
+[Service]
+User=tobi
+WorkingDirectory=/home/tobi/Development/upnepa
+# Environment="PATH=/home/tobi/python/venv/bin"
+ExecStart=/home/tobi/Development/upnepa/upnepa-env/bin/python home/tobi/Development/upnepa/led_controller.py
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
