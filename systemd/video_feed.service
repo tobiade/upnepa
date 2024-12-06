@@ -7,7 +7,7 @@ After=network.target
 [Service]
 User=tobi
 WorkingDirectory=/home/tobi/Development/upnepa
-ExecStart=/home/tobi/Development/upnepa/scripts/video_feed.sh rtsp://upnepa.live
+ExecStart=/home/tobi/Development/upnepa/scripts/video_feed.sh upnepa.live
 Restart=always
 
 [Install]

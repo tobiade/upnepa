@@ -6,8 +6,8 @@ After=network.target
 
 [Service]
 User=tobi
-WorkingDirectory=/home/tobi/Development/mediamtx
-ExecStart=/home/tobi/Development/mediamtx /home/tobi/Development/upnepa/mediamtx/mediamtx.yml
+WorkingDirectory=/home/tobi/Development/upnepa
+ExecStart=/home/tobi/Development/mediamtx/mediamtx mediamtx/mediamtx.yml
 Restart=always
 
 [Install]

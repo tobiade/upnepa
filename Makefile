@@ -11,7 +11,7 @@ REMOTE = remote
 PYTHON_DIR = python
 VENV_DIR = $(PYTHON_DIR)/venv
 REQUIREMENTS = $(PYTHON_DIR)/requirements.txt
-PROJECT_DIR = /Development/upnepa
+PROJECT_DIR = Development/upnepa
 SCRIPTS_DIR = /home/$(REMOTE_USER)/$(PROJECT_DIR)/scripts
 
 # Services to manage
@@ -51,7 +51,7 @@ deploy-frontend-remote:
 # Deploy Python services to remote server
 .PHONY: deploy-services-remote
 deploy-services-remote:
-	ssh $(REMOTE_HOST) "bash $(SCRIPTS_DIR)/register_service.sh"
+	ssh -t $(REMOTE_HOST) "cd ~/Development/upnepa/scripts && bash ./deploy_remote.sh"
 	
 # Deploy Python services locally
 .PHONY: deploy-services-local
