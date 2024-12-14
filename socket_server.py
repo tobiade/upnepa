@@ -18,6 +18,7 @@ class ConnectionHandler:
     async def store(self, message: str):
         # Set the LEDs and publish the LED state to the Redis queue
         try:
+            print("set LED state:", message)
             await self.r.lpush(LED_QUEUE, message)
         except Exception as e:
             print(e)
@@ -29,7 +30,7 @@ class ConnectionHandler:
                     if message is not None:
                         if message['type'] == 'message':
                             leds = message['data']
-                            print("got message:", leds)
+                            print("got LED state:", leds)
                             await websocket.send(leds.decode())
             except Exception as e:
                 print(e)
