@@ -1,10 +1,16 @@
-"use client";
+import { memo, useEffect, useRef, useState } from "react";
 
-import { useEffect, useRef, useState } from "react";
+const Cell = memo(({ isOn, onClick }: { isOn: boolean; onClick: () => void }) => (
+  <div
+    className={`rounded-full cursor-pointer transition-colors duration-200 border border-white/20 ${
+      isOn ? "bg-red-500/50" : "bg-white/10"
+    }`}
+    onClick={onClick}
+  />
+));
 
 export default function LEDGrid() {
   const [ledStates, setLedStates] = useState(Array(64).fill(false));
-  const videoRef = useRef<HTMLVideoElement>(null);
   const wsRef = useRef<WebSocket | null>(null);
 
   useEffect(() => {
@@ -27,20 +33,17 @@ export default function LEDGrid() {
           off?: { [key: string]: number[] };
         };
       } = JSON.parse(event.data);
-      if (data.ledStates && data.ledStates.on) {
-        setLedStates(() => {
-          const updatedLedStates = Array(64).fill(false);
-          if (data.ledStates?.on) {
-            Object.entries(data.ledStates.on).forEach(([column, rows]) => {
-              (rows as number[]).forEach((row) => {
-                const index = parseInt(column) + row * 8;
-                updatedLedStates[index] = true;
-              });
+
+        setLedStates((prev) => {
+          const updatedStates = [...prev];
+          Object.entries(data.ledStates?.on || {}).forEach(([column, rows]) => {
+            (rows as number[]).forEach((row) => {
+              const index = parseInt(column) + row * 8;
+              updatedStates[index] = true;
             });
-          }
-          return updatedLedStates;
+          });
+          return updatedStates;
         });
-      }
     };
 
     wsRef.current.onerror = (error) => {
@@ -51,28 +54,20 @@ export default function LEDGrid() {
       console.log("WebSocket connection closed");
     };
 
-    // Set up video stream
-    if (videoRef.current) {
-      videoRef.current.src = "https://example.com/led-grid-stream"; // Replace with actual stream URL
-    }
-
-    // Clean up WebSocket connection on component unmount
     return () => {
-      if (wsRef.current) {
-        wsRef.current.close();
-      }
+      if (wsRef.current) wsRef.current.close();
     };
   }, []);
 
   const toggleLED = (index: number) => {
-    if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
-      setLedStates((prevStates) => {
-        const updatedLedStates = [...prevStates];
-        updatedLedStates[index] = !updatedLedStates[index];
+    if (wsRef.current?.readyState === WebSocket.OPEN) {
+      setLedStates((prev) => {
+        const updatedStates = [...prev];
+        updatedStates[index] = !updatedStates[index];
 
         const column = index % 8;
         const row = Math.floor(index / 8);
-        const state = updatedLedStates[index] ? "on" : "off";
+        const state = updatedStates[index] ? "on" : "off";
 
         const ledStatesJson = {
           ledStates: {
@@ -83,36 +78,21 @@ export default function LEDGrid() {
         };
 
         wsRef.current?.send(JSON.stringify(ledStatesJson));
-        return updatedLedStates;
+        console.log(`Toggled LED at index: ${index}`);
+        return updatedStates;
       });
     } else {
       console.error("WebSocket is not connected");
     }
-    console.log("Toggled LED at index:", index);
   };
 
   return (
-    <div className="bg-black rounded-lg overflow-hidden shadow-lg flex-1">
-      <svg
-        className="w-full h-full"
-        viewBox="0 0 8 8"
-        xmlns="http://www.w3.org/2000/svg"
-      >
+    <div className="bg-black rounded-lg shadow-lg p-4 flex-1">
+      <div className="grid grid-cols-8 grid-rows-8 gap-1 w-full h-full">
         {ledStates.map((isOn, index) => (
-          <rect
-            key={index}
-            x={index % 8}
-            y={Math.floor(index / 8)}
-            width="1"
-            height="1"
-            fill={isOn ? "rgba(255, 0, 0, 0.5)" : "rgba(255, 255, 255, 0.1)"}
-            stroke="rgba(255, 255, 255, 0.2)"
-            strokeWidth="0.05"
-            className="cursor-pointer transition-colors duration-200"
-            onClick={() => toggleLED(index)}
-          />
+          <Cell key={index} isOn={isOn} onClick={() => toggleLED(index)} />
         ))}
-      </svg>
+      </div>
     </div>
   );
 }
