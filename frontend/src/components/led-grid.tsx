@@ -34,10 +34,10 @@ export default function LEDGrid() {
         };
       } = JSON.parse(event.data);
 
-        setLedStates((prev) => {
-          const updatedStates = [...prev];
+        setLedStates(() => {
+          const updatedStates = Array(64).fill(false);
           Object.entries(data.ledStates?.on || {}).forEach(([column, rows]) => {
-            (rows as number[]).forEach((row) => {
+            rows.forEach((row) => {
               const index = parseInt(column) + row * 8;
               updatedStates[index] = true;
             });
