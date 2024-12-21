@@ -2,7 +2,7 @@
 
 Welcome to **upnepa**, the finest (and possibly only) solution for remotely controlling LEDs to mimic the unpredictable, legendary Nigerian power supply system. Inspired by the cry of "Up NEPA!" whenever the lights come on, this project aims to bring that *authentic* experience right to your fingertips - no small gen required.
 
-Head over to [upnepa.live](https://upnepa.live/) to begin relieving your trauma now!
+Head over to [upnepa.live](https://upnepa.live/) to begin reliving your trauma now!
 
 
 ## 🖊 Table of Contents
